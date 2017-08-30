@@ -1,0 +1,23 @@
+{
+  "name": "ctp431",
+  "version": "0.1.0",
+  "description": "CTP431 Fall 2017",
+  "main": "index.js",
+  "scripts": {
+    "start": "http-server -p 9431",
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/panarch/ctp431.git"
+  },
+  "author": "Taehoon Moon",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/panarch/ctp431/issues"
+  },
+  "homepage": "https://github.com/panarch/ctp431#readme",
+  "devDependencies": {
+    "http-server": "^0.10.0"
+  }
+}
