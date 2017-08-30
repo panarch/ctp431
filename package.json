@@ -4,7 +4,7 @@
   "description": "CTP431 Fall 2017",
   "main": "index.js",
   "scripts": {
-    "start": "http-server -p 9431",
+    "start": "http-server -p 9431 -c-1",
     "test": "npm test"
   },
   "repository": {
