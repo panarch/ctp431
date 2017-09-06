@@ -1,0 +1,42 @@
+:root {
+  --border-color: #333;
+}
+
+body {
+  box-sizing: border-box;
+  font-family: sans-serif;
+  color: #333;
+}
+
+button {
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  line-height: normal;
+  overflow: visible;
+  padding: 0;
+  -webkit-user-select: none; /* for button */
+     -moz-user-select: none;
+      -ms-user-select: none;
+}
+
+button::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+/* custom style */
+button {
+  padding: 10px 15px;
+  border: 1px solid var(--border-color);
+  text-transform: uppercase;
+}
+
+button:hover {
+  opacity: 0.5;
+}
+
+button:active {
+  opacity: 0.7;
+}
