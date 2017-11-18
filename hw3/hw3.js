@@ -2,8 +2,8 @@ var context = new AudioContext()
 var synth;
 
 var synth_params = {
-  lfoRate:0,
-  lfoDepth: 5,
+  lfoRate:0.1,
+  lfoDepth: 0.5,
   filterCutoffFreq:5000,
   filterQ:1,
   filterEnvAttackTime: 0.1,
@@ -41,19 +41,19 @@ else
 
 
 nx.onload = function() {
-  console.log('...???');
-
   // OSC
   gui_lfo_rate.min = 0.1;
   gui_lfo_rate.max = 10;
+  gui_lfo_rate.set({ value: synth_params.lfoRate });
   gui_lfo_rate.on('*', data => {
-    console.log(data.value);
+    synth.updateParams('lfo_rate', data.value);
   });
 
   gui_lfo_depth.min = 0;
   gui_lfo_depth.max = 1;
+  gui_lfo_depth.set({ value: synth_params.lfoDepth });
   gui_lfo_depth.on('*', data => {
-    console.log(data.value);
+    synth.updateParams('lfo_depth', data.value);
   });
 
   // Filter

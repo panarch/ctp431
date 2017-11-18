@@ -7,6 +7,12 @@ var Voice = function(context, frequency, amplitude, parameters, effect_node) {
     this.voiceState = 0;
   };
 
+  this.lfo = context.createOscillator();
+  this.lfo.frequency.value = parameters.lfoRate;
+
+  this.lfoGain = context.createGain();
+  this.lfoGain.gain.value = parameters.lfoDepth;
+
   // filter
   this.filter = context.createBiquadFilter();
 
@@ -14,7 +20,10 @@ var Voice = function(context, frequency, amplitude, parameters, effect_node) {
   this.ampEnv = context.createGain();
 
   // connect
-  this.osc.connect(this.filter);
+  this.lfo.connect(this.lfoGain.gain);
+  this.osc.connect(this.lfoGain);
+  this.lfoGain.connect(this.filter);
+  // this.osc.connect(this.filter);
   this.filter.connect(this.ampEnv);
 
   //this.ampEnv.connect(context.destination);
@@ -44,6 +53,7 @@ var Voice = function(context, frequency, amplitude, parameters, effect_node) {
 
 Voice.prototype.on = function() {
   this.osc.start();
+  this.lfo.start();
   this.triggerAmpEnvelope();
 
   this.voiceState = 1;
@@ -71,6 +81,7 @@ Voice.prototype.off = function() {
   param.setValueAtTime(param.value, now);
   param.exponentialRampToValueAtTime(0.001, now + this.ampEnvReleaseTime);
   this.osc.stop(now + this.ampEnvReleaseTime);
+  this.lfo.stop(now + this.ampEnvReleaseTime);
 };
 
 
@@ -122,6 +133,12 @@ Synth.prototype.noteOff = function(midi_note_number) {
 Synth.prototype.updateParams = function(params, value) {
 
   switch (params) {
+    case 'lfo_rate':
+      this.parameters.lfoRate = value;
+      break;
+    case 'lfo_depth':
+      this.parameters.lfoDepth = value;
+      break;
     case 'filter_freq':
       this.parameters.filterCutoffFreq = value;
       break;
