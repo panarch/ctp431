@@ -64,6 +64,34 @@ nx.onload = function() {
     synth.updateParams('filter_freq', data.value);
   });
 
+  gui_filter_env_attack.min = 0;
+  gui_filter_env_attack.max = 3;
+  gui_filter_env_attack.set({ value: synth_params.filterEnvAttackTime });
+  gui_filter_env_attack.on('*', function (data) {
+    synth.updateParams('filter_attack_time', data.value);
+  });
+
+  gui_filter_env_decay.min = 0;
+  gui_filter_env_decay.max = 3;
+  gui_filter_env_decay.set({ value: synth_params.filterEnvDecayTime });
+  gui_filter_env_decay.on('*', function (data) {
+    synth.updateParams('filter_decay_time', data.value);
+  });
+
+  gui_filter_env_sustain.min = 0;
+  gui_filter_env_sustain.max = 1;
+  gui_filter_env_sustain.set({ value: synth_params.filterEnvSustainLevel });
+  gui_filter_env_sustain.on('*', function (data) {
+    synth.updateParams('filter_sustain_level', data.value);
+  });
+
+  gui_filter_env_release.min = 0;
+  gui_filter_env_release.max = 3;
+  gui_filter_env_release.set({ value: synth_params.filterEnvReleaseTime });
+  gui_filter_env_release.on('*', function (data) {
+    synth.updateParams('filter_release_time', data.value);
+  });
+
   // Amp ENV
   gui_amp_env_attack.min = 0;
   gui_amp_env_attack.max = 3;

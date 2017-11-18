@@ -35,6 +35,10 @@ var Voice = function(context, frequency, amplitude, parameters, effect_node) {
 
   this.filterCutoffFreq = parameters.filterCutoffFreq;
   this.filterQ = parameters.filterQ;
+  this.filterEnvAttackTime = parameters.filterEnvAttackTime;
+  this.filterEnvDecayTime = parameters.filterEnvDecayTime;
+  this.filterEnvSustainLevel = parameters.filterEnvSustainLevel;
+  this.filterEnvReleaseTime = parameters.filterEnvReleaseTime;
 
   this.ampEnvLevel = amplitude;
   this.ampEnvAttackTime = parameters.ampEnvAttackTime;
@@ -44,7 +48,7 @@ var Voice = function(context, frequency, amplitude, parameters, effect_node) {
 
   this.osc.type = 'square';
   this.filter.type = 'lowpass';
-  this.filter.frequency.value = 5000;
+  // this.filter.frequency.value = 5000;
 
   this.ampEnv.gain.value = 0.5;
 
@@ -55,6 +59,7 @@ Voice.prototype.on = function() {
   this.osc.start();
   this.lfo.start();
   this.triggerAmpEnvelope();
+  this.triggerFreqEnvelope();
 
   this.voiceState = 1;
 };
@@ -72,6 +77,23 @@ Voice.prototype.triggerAmpEnvelope = function() {
   // decay
   param.linearRampToValueAtTime(this.ampEnvLevel * this.ampEnvSustainLevel, now + this.ampEnvAttackTime + this.ampEnvDecayTime);
 };
+
+Voice.prototype.triggerFreqEnvelope = function() {
+  const param = this.filter.frequency;
+  const now = this.context.currentTime;
+
+  param.cancelScheduledValues(now);
+
+  // attack
+  param.setValueAtTime(100, now);
+  param.linearRampToValueAtTime(this.filterCutoffFreq, now + this.filterEnvAttackTime);
+
+  // decay
+  param.linearRampToValueAtTime(
+    this.filterCutoffFreq * this.filterEnvSustainLevel,
+    now + this.filterEnvAttackTime + this.filterEnvDecayTime
+  );
+}
 
 Voice.prototype.off = function() {
   var param = this.ampEnv.gain;
@@ -141,6 +163,18 @@ Synth.prototype.updateParams = function(params, value) {
       break;
     case 'filter_freq':
       this.parameters.filterCutoffFreq = value;
+      break;
+    case 'filter_attack_time':
+      this.parameters.filterEnvAttackTime = value;
+      break;
+    case 'filter_decay_time':
+      this.parameters.filterEnvDecayTime = value;
+      break;
+    case 'filter_sustain_level':
+      this.parameters.filterEnvSustainLevel = value;
+      break;
+    case 'filter_release_time':
+      this.parameters.filterEnvReleaseTime = value;
       break;
     case 'amp_attack_time':
       this.parameters.ampEnvAttackTime = value;
