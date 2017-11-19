@@ -29,7 +29,8 @@ var reverb_params = {
 var temp = context.createOscillator();
 
 var synth = new Synth(context, synth_params);
-var delay = new Delay(context, delay_params);
+var reverb = new Reverb(context, reverb_params);
+var delay = new Delay(context, delay_params, reverb);
 
 synth.connect(delay);
 
@@ -136,6 +137,13 @@ nx.onload = function() {
   gui_delay_wet_dry.set({ value: delay_params.delayWetDry })
   gui_delay_wet_dry.on('*',function(data) {
     delay.updateParams('delay_dry_wet', data.value);
+  });
+
+  gui_reverb_time.min = 0;
+  gui_reverb_time.max = 1;
+  gui_reverb_time.set({ value: reverb_params.reverbWetDry });
+  gui_reverb_time.on('*', function(data) {
+    reverb.updateParams('reverb_dry_wet', data.value);
   });
 
   // Keyboard   

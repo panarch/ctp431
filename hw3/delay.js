@@ -1,4 +1,4 @@
-var Delay = function(context, parameters) {
+var Delay = function(context, parameters, outputNode) {
   
     this.context = context;
     this.input = context.createGain();
@@ -17,8 +17,8 @@ var Delay = function(context, parameters) {
   
     this.input.connect(this.dryGain);
   
-    this.dryGain.connect(this.context.destination);
-    this.wetGain.connect(this.context.destination);
+    this.dryGain.connect(outputNode.input);
+    this.wetGain.connect(outputNode.input);
   
     this.delayLine.delayTime.value = parameters.delayTime;
     this.feedbackGain.gain.value = parameters.delayFeedbackGain;
