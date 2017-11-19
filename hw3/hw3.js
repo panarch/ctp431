@@ -1,6 +1,7 @@
 var context = new AudioContext()
 var synth;
 
+/* original values
 var synth_params = {
   lfoRate:0.1,
   lfoDepth: 0.5,
@@ -21,8 +22,30 @@ var delay_params = {
   delayFeedbackGain: 0.2,
   delayWetDry: 0.1
 }
+*/
+
+var synth_params = {
+  lfoRate:10.0,
+  lfoDepth: 0.25,
+  filterCutoffFreq: 3500,
+  filterQ:1,
+  filterEnvAttackTime: 0.7,
+  filterEnvDecayTime: 0.8,
+  filterEnvSustainLevel: 0.75,
+  filterEnvReleaseTime: 1.25,
+  ampEnvAttackTime: 0.3,
+  ampEnvDecayTime: 3,
+  ampEnvSustainLevel: 0.9,
+  ampEnvReleaseTime: 1
+};
+
+var delay_params = {
+  delayTime: 1,
+  delayFeedbackGain: 0.6,
+  delayWetDry: 0.5
+}
 var reverb_params = {
-  reverbWetDry: 0.5
+  reverbWetDry: 0.75
 };
 
 // default
