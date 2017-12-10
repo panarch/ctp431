@@ -1,6 +1,3 @@
-const synth = new Tone.Synth().toMaster();
-synth.triggerAttackRelease('C4', '8n');
-
 const SLOT_WIDTH = 30;
 const SLOT_HEIGHT = 30;
 const NUM_WIDTH = 20;
@@ -270,6 +267,7 @@ function moveForward() { move(1); }
 function moveBackward() { move(-1); }
 
 // sound controls
+const synth = new Tone.Synth().toMaster();
 const panner = new Tone.Panner3D().toMaster();
 panner.maxDistance = 50;
 // panner.distanceModel = 'exponential';
@@ -305,6 +303,12 @@ function updateMoveSound() {
   if (board[x][y] === Slot.TRAP) {
     activateTrap(x, y);
   }
+
+  resetHoleSideSounds();
+  if (board[x + 1] && board[x + 1][y] === Slot.HOLE) playHoleSideSound(0, x + 1, y);
+  if (board[x - 1] && board[x - 1][y] === Slot.HOLE) playHoleSideSound(1, x - 1, y);
+  if (board[x][y + 1] === Slot.HOLE) playHoleSideSound(2, x, y + 1);
+  if (board[x][y - 1] === Slot.HOLE) playHoleSideSound(3, x, y - 1);
 }
 
 function activateTrap(x, y) {
@@ -327,6 +331,40 @@ function activateTrap(x, y) {
   }
 
   _run(3);
+}
+
+const noises = [
+  new Tone.Noise({ volume: -30, type: 'brown' }),
+  new Tone.Noise({ volume: -30, type: 'brown' }),
+  new Tone.Noise({ volume: -30, type: 'brown' }),
+  new Tone.Noise({ volume: -30, type: 'brown' }),
+];
+
+const noisePanners = [
+  new Tone.Panner3D(),
+  new Tone.Panner3D(),
+  new Tone.Panner3D(),
+  new Tone.Panner3D()
+];
+
+noises.forEach((noise, i) => {
+  noise.connect(noisePanners[i]);
+});
+
+noisePanners.forEach(panner => {
+  panner.toMaster();
+  panner.maxDistance = 1;
+});
+
+function resetHoleSideSounds() {
+  noises.forEach(noise => {
+    noise.stop();
+  })
+}
+
+function playHoleSideSound(i, x, y) {
+  noisePanners[i].setPosition(x, 0, y);
+  noises[i].start();
 }
 
 function playHoleSound()  {
