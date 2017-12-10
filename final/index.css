@@ -133,3 +133,26 @@ div {
   width: 100%;
   height: 50px;
 }
+
+.message {
+  animation-duration: 3s;
+  animation-name: shake;
+  animation-iteration-count: infinite;
+}
+
+@keyframes shake {
+  0% { transform: translate3d(0, 0, 0); }
+  2% { transform: translate3d(3px, 0, 0); }
+  4% { transform: translate3d(0, 0, 0); }
+  6% { transform: translate3d(-3px, 0, 0); }
+  8% { transform: translate3d(0, 0, 0); }
+  10% { transform: translate3d(3px, 0, 0); }
+  12% { transform: translate3d(0, 0, 0); }
+  14% { transform: translate3d(-3px, 0, 0); }
+  16% { transform: translate3d(0, 0, 0); }
+  18% { transform: translate3d(3px, 0, 0); }
+  20% { transform: translate3d(0, 0, 0); }
+  22% { transform: translate3d(-3px, 0, 0); }
+  24% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
