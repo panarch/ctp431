@@ -190,6 +190,102 @@ function renderSlots() {
   }
 }
 
+const $player = document.createElement('div');
+$player.classList.add('player');
+
+const PLAYER_DIRECTIONS = [
+  [0, -1], [1, 0], [0, 1], [-1, 0],
+];
+
+const $message = document.querySelector('.message');
+let started = false;
+let mapHidden = false;
+
+let playerDirection = PLAYER_DIRECTIONS[0];
+let playerPosition = [0, 0];
+
+// game logic handlers
+function resetPlayerPosition() {
+  const [x, y] = points[0];
+  document.getElementById(getSlotId(x, y)).appendChild($player);
+
+  playerPosition = [x, y];
+  playerDirection = PLAYER_DIRECTIONS[0];
+  $player.style.transform = `rotateZ(-45deg)`;
+}
+
+function turn(left = true) {
+  let index = PLAYER_DIRECTIONS.indexOf(playerDirection);
+
+  if (left) {
+    index--;
+    if (index < 0) index = PLAYER_DIRECTIONS.length - 1;
+  } else {
+    index++;
+    if (index >= PLAYER_DIRECTIONS.length) index = 0;
+  }
+
+  playerDirection = PLAYER_DIRECTIONS[index];
+  $player.style.transform = `rotateZ(${ -45 + 90 * index }deg)`;
+
+  updateTurnSound();
+}
+
+function turnLeft() { turn(true); }
+function turnRight() { turn(false); }
+
+function move(d) {
+  let [x, y] = playerPosition;
+
+  x += playerDirection[0] * d;
+  y += playerDirection[1] * d;
+
+  const end = points[points.length - 1]
+  const $slot = document.getElementById(getSlotId(x, y));
+  if (!$slot || board[x][y] === Slot.WALL) {
+    playWallSound();
+    return;
+  } else if (board[x][y] === Slot.HOLE) {
+    playHoleSound();
+    started = false;
+    showMap();
+    $message.textContent = `Oops! You've fallen into a sinkhole.`;
+  } else if (x === end[0] && y === end[1]) {
+    playSuccessSound();
+    started = false;
+    $message.textContent = 'Congratulations!!';
+    showMap();
+  }
+
+  playerPosition = [x, y];
+  document.getElementById(getSlotId(x, y)).appendChild($player);
+}
+
+function moveForward() { move(1); }
+function moveBackward() { move(-1); }
+
+// sound controls
+function updateTurnSound() {
+
+}
+
+function updateMoveSound() {
+
+}
+
+function playHoleSound()  {
+  synth.triggerAttackRelease('A5', '4n');
+}
+
+function playWallSound() {
+  synth.triggerAttackRelease('C4', '8n');
+}
+
+function playSuccessSound() {
+  const polySynth = new Tone.PolySynth(4, Tone.Synth).toMaster();
+  polySynth.triggerAttackRelease(['C4', 'D4', 'G4', 'Bb4'], '2n');
+}
+
 // game controls
 const $startBtn = document.querySelector('.btn-start');
 const $mapBtn = document.querySelector('.btn-map');
@@ -199,8 +295,6 @@ $startBtn.addEventListener('click', function () {
   $startBtn.textContent = 'Restart';
   start();
 });
-
-let mapHidden = false;
 
 function toggleMap() {
   if (mapHidden) {
@@ -235,11 +329,28 @@ function start(hide = true) {
   }
   }
 
-  if (hide) hideMap();
+  if (hide) {
+    hideMap();
+    started = true;
+    $message.textContent = 'Close your eyes and try!';
+  }
 
   generatePath();
   fillEmptySlots();
   renderSlots();
+  resetPlayerPosition();
 }
 
 start(false);
+// key event handlers
+document.addEventListener('keydown', function (e) {
+  if (!started) return;
+
+  switch (e.key) {
+  case 'a': return turnLeft();
+  case 'd': return turnRight();
+  case 'w': return moveForward();
+  case 's': return moveBackward();
+  }
+
+});

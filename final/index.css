@@ -27,6 +27,10 @@ div {
   border: 2px solid white;
   cursor: pointer;
   color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .slot:hover {
@@ -67,6 +71,18 @@ div {
   background-color: green;
 }
 
+.player {
+  width: 16px;
+  height: 16px;
+  border-color: red;
+  border-style: solid;
+  border-width: 8px 8px 0 0;
+  border-color: red red transparent transparent;
+  border-radius: 50% 0 50% 0;
+  transform-origin: 50% 50%;
+  transform: rotateZ(-45deg);
+}
+
 .controls {
   margin-top: 10px;
   width: 600px;
@@ -86,7 +102,7 @@ div {
 }
 
 .controls > .info p {
-  margin: 5px;
+  margin: 3px;
 }
 
 .controls > .info .slot {
@@ -94,7 +110,7 @@ div {
 }
 
 .controls > .keys p {
-  margin: 2px;
+  margin: 5px;
 }
 
 .controls > .spacer {
@@ -102,7 +118,7 @@ div {
 }
 
 .controls > .buttons {
-  width: 200px;
+  width: 300px;
   display: flex;
   flex-direction: column;
   align-items: center;
