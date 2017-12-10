@@ -372,7 +372,24 @@ function playHoleSound()  {
 }
 
 function playWallSound() {
-  synth.triggerAttackRelease('C3', '8n');
+  const fmsynth = new Tone.FMSynth({
+    modulationIndex: 12.22,
+    envelope: {
+      attack: 0.01,
+      decay: 0.2,
+    },
+    modulation: {
+      type: 'square',
+    },
+    modulationEnvelope: {
+      attack: 0.01,
+      decay: 0.01,
+    },
+    volume: -5,
+  }).toMaster();
+
+  const note = ['C3', 'C#3', 'D3', 'D#3', 'E3'][Math.floor(Math.random() * 5)];
+  fmsynth.triggerAttackRelease(note, '4n');
 }
 
 function playSuccessSound() {
