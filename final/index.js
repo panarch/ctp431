@@ -12,7 +12,7 @@ const Slot = {
   ROAD: 'road',
   WALL: 'wall', // sound on bump
   HOLE: 'hole', // sound on 1-distance - continuous
-  TRAP: 'trap', // sound on [0,1]-distance - pattern, same position on 0-distance
+  TRAP: 'trap', // sound on the position, caution a few times and activate
 };
 
 const board = new Array(NUM_HEIGHT);
@@ -164,9 +164,9 @@ function _generate(p0, p1) {
 function pickSlotType() {
   // ROAD, WALL, HOLE, TRAP
   const value = Math.random();
-  if (value < 0.3) return Slot.ROAD;
-  else if (value < 0.50) return Slot.TRAP;
-  // else if (value < 0.75) return Slot.HOLE;
+  if (value < 0.55) return Slot.ROAD;
+  else if (value < 0.70) return Slot.TRAP;
+  else if (value < 0.85) return Slot.HOLE;
 
   return Slot.WALL;
 }
@@ -296,16 +296,37 @@ function updateTurnSound() {
 }
 
 function updateMoveSound() {
-  console.log('move', playerPosition[0], playerPosition[1]);
-  Tone.Listener.setPosition(playerPosition[0], 0, playerPosition[1]);
+  const [x, y] = playerPosition;
+  Tone.Listener.setPosition(x, 0, y);
 
-  /*
-  const end = points[points.length - 1];
-  const dx = end[0] - playerPosition[0];
-  const dy = end[1] - playerPosition[1];
-  console.log('dx, dy', dx, dy);
-  // panner.setPosition(dx, 1, dy);
-  */
+  // check holes
+
+  // check trap
+  if (board[x][y] === Slot.TRAP) {
+    activateTrap(x, y);
+  }
+}
+
+function activateTrap(x, y) {
+  function _run(counter) {
+    if (x !== playerPosition[0] || y !== playerPosition[1]) {
+      return; // cancel trap timer
+    }
+
+    if (counter <= 0) {
+      synth.triggerAttackRelease('G5', '4n');
+      started = false;
+      showMap();
+      $message.textContent = 'Oops! Trap activated!';
+      return;
+    } else {
+      synth.triggerAttackRelease('F3', '8n');
+    }
+
+    setTimeout(_run.bind(this, counter - 1), 500);
+  }
+
+  _run(3);
 }
 
 function playHoleSound()  {
