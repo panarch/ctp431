@@ -150,7 +150,7 @@ function _generate(p0, p1) {
   for (let x = minX; x <= maxX; x++) {
   for (let y = minY; y <= maxY; y++) {
     if (board[x][y] === Slot.EMPTY) {
-      board[x][y] = Math.random() < 0.85 ? Slot.ROAD : Slot.TRAP;
+      board[x][y] = Math.random() < 0.9 ? Slot.ROAD : Slot.TRAP;
     }
 
     const $slot = document.getElementById(getSlotId(x, y));
@@ -166,7 +166,7 @@ function pickSlotType() {
   const value = Math.random();
   if (value < 0.3) return Slot.ROAD;
   else if (value < 0.50) return Slot.TRAP;
-  else if (value < 0.75) return Slot.HOLE;
+  // else if (value < 0.75) return Slot.HOLE;
 
   return Slot.WALL;
 }
@@ -212,6 +212,10 @@ function resetPlayerPosition() {
   playerPosition = [x, y];
   playerDirection = PLAYER_DIRECTIONS[0];
   $player.style.transform = `rotateZ(-45deg)`;
+
+  resetMusicPosition();
+  updateTurnSound();
+  updateMoveSound();
 }
 
 function turn(left = true) {
@@ -259,18 +263,49 @@ function move(d) {
 
   playerPosition = [x, y];
   document.getElementById(getSlotId(x, y)).appendChild($player);
+  updateMoveSound();
 }
 
 function moveForward() { move(1); }
 function moveBackward() { move(-1); }
 
 // sound controls
-function updateTurnSound() {
+const panner = new Tone.Panner3D().toMaster();
+panner.maxDistance = 50;
+// panner.distanceModel = 'exponential';
+// panner.panningModel = 'HRTF';
 
+const player = new Tone.Player({
+  url: './Allemande.mp3',
+  loop: true,
+}).connect(panner)
+player.autostart = true;
+player.volume.value = 0;
+
+function resetMusicPosition() {
+  const [x, y] = points[points.length - 1];
+  panner.setPosition(x, 1, y);
+}
+
+function updateTurnSound() {
+  console.log('turn!', playerDirection, playerPosition, points[points.length - 1]);
+  Tone.Listener.setOrientation(
+    playerDirection[0], 0, playerDirection[1],
+    0, 1, 0
+  );
 }
 
 function updateMoveSound() {
+  console.log('move', playerPosition[0], playerPosition[1]);
+  Tone.Listener.setPosition(playerPosition[0], 0, playerPosition[1]);
 
+  /*
+  const end = points[points.length - 1];
+  const dx = end[0] - playerPosition[0];
+  const dy = end[1] - playerPosition[1];
+  console.log('dx, dy', dx, dy);
+  // panner.setPosition(dx, 1, dy);
+  */
 }
 
 function playHoleSound()  {
@@ -278,7 +313,7 @@ function playHoleSound()  {
 }
 
 function playWallSound() {
-  synth.triggerAttackRelease('C4', '8n');
+  synth.triggerAttackRelease('C3', '8n');
 }
 
 function playSuccessSound() {
