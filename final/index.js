@@ -76,8 +76,6 @@ function generatePath() {
   if (Math.random() > 0.5) choice.reverse();
 
   const [start, end] = choice;
-
-  console.log(start, ' -> ', end);
   points = [start];
 
   let lastDirection = [0, 0];
@@ -94,13 +92,9 @@ function generatePath() {
       Math.abs(d[0]) !== Math.abs(lastDirection[0])
     ));
 
-    console.log(JSON.stringify(directions));
-
     const direction = directions[Math.floor(Math.random() * directions.length)];
-    console.log('direction', direction);
     const ratio = calculateMaxLengthRatio(direction, start, end);
     const length = 2 + Math.floor(Math.random() * Math.min(NUM_WIDTH, NUM_HEIGHT) * ratio);
-    console.log('direction', direction, 'ratio', ratio, 'length', length);
     const newX = current[0] + direction[0] * length;
     const newY = current[1] + direction[1] * length;
 
@@ -110,7 +104,6 @@ function generatePath() {
     ];
 
     if (newCurrent[0] === current[0] && newCurrent[1] === current[1]) {
-      console.log('same!');
       continue;
     }
 
@@ -119,8 +112,6 @@ function generatePath() {
     points.push(newCurrent);
   }
 
-  console.log('last point', current);
-  console.log(current[0] === end[0] && current[1] === end[1])
   generate();
 }
 
@@ -286,7 +277,6 @@ function resetMusicPosition() {
 }
 
 function updateTurnSound() {
-  console.log('turn!', playerDirection, playerPosition, points[points.length - 1]);
   Tone.Listener.setOrientation(
     playerDirection[0], 0, playerDirection[1],
     0, 1, 0
@@ -453,6 +443,7 @@ function start(hide = true) {
 }
 
 start(false);
+
 // key event handlers
 document.addEventListener('keydown', function (e) {
   if (!started) return;
@@ -463,5 +454,4 @@ document.addEventListener('keydown', function (e) {
   case 'w': return moveForward();
   case 's': return moveBackward();
   }
-
 });
