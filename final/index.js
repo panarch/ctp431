@@ -150,7 +150,7 @@ function _generate(p0, p1) {
   for (let x = minX; x <= maxX; x++) {
   for (let y = minY; y <= maxY; y++) {
     if (board[x][y] === Slot.EMPTY) {
-      board[x][y] = Math.random() < 0.7 ? Slot.ROAD : Slot.TRAP;
+      board[x][y] = Math.random() < 0.85 ? Slot.ROAD : Slot.TRAP;
     }
 
     const $slot = document.getElementById(getSlotId(x, y));
@@ -190,7 +190,42 @@ function renderSlots() {
   }
 }
 
-function reset() {
+// game controls
+const $startBtn = document.querySelector('.btn-start');
+const $mapBtn = document.querySelector('.btn-map');
+
+$mapBtn.addEventListener('click', toggleMap);
+$startBtn.addEventListener('click', function () {
+  $startBtn.textContent = 'Restart';
+  start();
+});
+
+let mapHidden = false;
+
+function toggleMap() {
+  if (mapHidden) {
+    showMap();
+  } else {
+    hideMap();
+  }
+}
+
+function showMap() {
+  mapHidden = false;
+  $board.classList.remove('hidden');
+  $mapBtn.textContent = 'Hide Map';
+}
+
+function hideMap() {
+  mapHidden = true;
+
+  if (!$board.classList.contains('hidden')) {
+    $board.classList.add('hidden');
+    $mapBtn.textContent = 'Show Map';
+  }
+}
+
+function start(hide = true) {
   for (let x = 0; x < NUM_WIDTH; x++) {
   for (let y = 0; y < NUM_HEIGHT; y++) {
     board[x][y] = Slot.EMPTY;
@@ -200,11 +235,11 @@ function reset() {
   }
   }
 
+  if (hide) hideMap();
+
   generatePath();
   fillEmptySlots();
   renderSlots();
 }
 
-reset();
-
-window._reset = reset;
+start(false);

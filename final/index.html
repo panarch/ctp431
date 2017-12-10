@@ -9,8 +9,46 @@
   <script src='./Tone.min.js'></script>
 </head>
 <body>
-  <h3>CTP431 2017 Final Project</h3>
+  <h3>Sound Maze - CTP431 Final Project</h3>
   <div class='board'>
+  </div>
+  <div class='controls'>
+    <div class='info'>
+      <div>
+        <div class='slot start'></div>
+        <p>Starting</p>
+      </div>
+      <div>
+        <div class='slot end'></div>
+        <p>Goal</p>
+      </div>
+      <div>
+        <div class='slot wall'></div>
+        <p>Wall</p>
+      </div>
+      <div>
+        <div class='slot hole'></div>
+        <p>Hole</p>
+      </div>
+    </div>
+    <div class='keys'>
+      <p>W - Go Forward</p> 
+      <p>S - Go Backward</p> 
+      <p>A - Go Left</p> 
+      <p>D - Go Right</p> 
+      <p>Q - Turn Left</p> 
+      <p>E - Turn Right</p> 
+    </div>
+    <div class='spacer'>
+    </div>
+    <div class='buttons'>
+      <p>You can do it!</p>
+      <button class='btn-start'>Start</button>
+      <button class='btn-map'>Hide Map</button>
+      <!--
+      <p>You've fell into a hole</p>
+      -->
+    </div>
   </div>
   <script src='./index.js'></script>
 </body>
