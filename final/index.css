@@ -8,6 +8,14 @@ div {
   box-sizing: border-box;
 }
 
+.header {
+  width: 600px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .board {
   position: relative;
   width: 604px;
